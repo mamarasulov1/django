@@ -1,0 +1,130 @@
+<!-- {{news.title}}
+{{news.id}}
+{{ news.image.images.url }} -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>News.kg</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f8fc;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .section_2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .wrapper_2 {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 800px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .wrapper_2 img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        .text-2 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .text-2 h1 {
+            color: #1e3a8a;
+        }
+
+        .meta-block {
+            margin: 10px 0 20px;
+        }
+
+        .category {
+            font-weight: bold;
+            font-size: 17px;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .tags {
+            font-size: 18px;
+            padding-top: 10px;
+            color: #4b4b4b;
+        }
+
+        .text_2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .author {
+            color: #4b5563;
+        }
+
+        .btn_2 {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #1d65ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background-color: #004fe6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="section_2">
+        <div class="wrapper_2">
+            {% if news.image %}
+            <img src="{{ news.image.url }}" alt="">
+            {% else %}
+            <img src="/media/news/photos/big.png" alt="">
+            {% endif %}
+            <div class="text-2">
+                <h1>{{ news.title }}</h1>
+                <div class="meta-block">
+                    <div class="category">
+                        {{ news.category.title }}
+                    </div>
+                    <div class="tags">
+                        {% for tag in news.tags.all %}
+                        {{ tag.name }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="text_2">
+                    <p>{{ news.descriptions }}</p>
+                    <p class="author">Author: {{ news.author }}</p>
+                </div>
+                <div class="btn_2">
+                    <a class="btn" href="{% url 'news-list' %}">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
