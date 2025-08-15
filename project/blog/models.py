@@ -1,9 +1,7 @@
 from django.db import models
-
 # Create your models here.
 
-
-class Catygory(models.Model):
+class Category(models.Model):
 
     title = models.CharField(
         verbose_name="Заголовок",
@@ -16,7 +14,6 @@ class Catygory(models.Model):
 
     def __str__(self):
         return self.title
-
 
 class Tag(models.Model):
     name = models.CharField(
@@ -31,14 +28,13 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
     
-    
 class News(models.Model):
     title = models.CharField(
         verbose_name="Заголовок",
         max_length=100,
     )
     category=models.ForeignKey(
-            Catygory,
+            Category,
             on_delete=models.CASCADE,
             related_name="news",
             verbose_name="Кат",
@@ -48,9 +44,8 @@ class News(models.Model):
         related_name="news",
         verbose_name="Теги",
         blank=True,
-        null=True
     )
-    descriptions = models.TextField(
+    description = models.TextField(
         verbose_name="описание",
         blank=True,
         null=True,
@@ -70,7 +65,7 @@ class News(models.Model):
         null=True,
         blank=True
     )
-    views = models.PositiveIntegerField(
+    views = models.IntegerField(
         verbose_name='просмотры',
         default=0
     )
@@ -78,13 +73,7 @@ class News(models.Model):
         verbose_name='публичность',
         default=True
     )
-    image = models.ImageField(
-        "фото", 
-        upload_to="news/photos", 
-        blank=True, 
-        null=True
-        )
-
+   
     class Meta:
         verbose_name = "новости"
         verbose_name_plural = "новости"
@@ -93,10 +82,8 @@ class News(models.Model):
     def main_image(self):
         return self.images.first()
 
-
     def __str__(self):
         return self.title
-    
     
 class NewsImage(models.Model):
     news = models.ForeignKey(
@@ -116,5 +103,5 @@ class NewsImage(models.Model):
         verbose_name = "Фото"
         verbose_name_plural = "Фото"
         
-    # def __str__(self):
-    #     return self.title
+    def __str__(self):
+        return f'Фото для: {self.news.title}'

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,6 +75,7 @@
             text-decoration: none;
             font-weight: 500;
         }
+
         .info_style {
             display: flex;
             justify-content: space-between;
@@ -98,23 +100,138 @@
             width: 24px;
             height: 24px;
         }
+        .head{
+            display: flex;
+            gap: 20px;
+
+        }
+        .active{
+            color: #cbcb00;
+        }
+        .active:hover{
+            color: #cbcb00;
+        }
+        .search-filter-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        }
+
+        .search-filter-form input[type="text"],
+        .search-filter-form select,
+        .search-filter-form button, 
+        .btnn{
+            padding: 10px 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            height: 40px;
+        }
+
+        .search-filter-form input[type="text"]:focus,
+        .search-filter-form select:focus {
+            border-color: #6c63ff;
+            box-shadow: 0 0 3px #6c63ff66;
+        }
+
+        .search-filter-form button,
+        .btnn{
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        .search-filter-form button:hover,.btnn:hover {
+            background-color: #574bd6;
+        }
+        .user{
+            margin-top: 25px;
+        }
+        .div{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .div2  h4 {
+            color: #000;
+            text-decoration: none;
+        }
+        .div4{
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <div class="container">
+            <div class="div">
+                <div class="head">
+                    {% for cats in categories %}
+                    <h2><a class="{% if selected_category and selected_category.id == cats.id %}active{% endif %}" href="{% url 'news_Cat' cats.id %}">{{cats.title}}</a></h2>
+                    {%endfor%}
+                    <h2>Добро пожаловать, {{ request.user.username }}!</h2>
+                    <a href="{% url 'logout' %}">Выйти</a>
+                </div>
+                <div class="div2" style="display: flex; gap: 20px; font-size: 20px;">
+                    <a class="div4" href="{% url 'login_' %}"><h4>Войти</h4></a>
+                    <a class="div4" href="{% url 'register_' %}"><h4>Регистрация</h4></a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
     <main>
+        <div class="container">
+            <form method="get" action="" class="search-filter-form">
+                
+                <input 
+                    type="text"
+                    name="search"
+                    placeholder="Поиск по заголовкам..."
+                    value="{{ search|default:''}}"
+                    autocomplete="off"
+                >
+                <select name="category">
+                    <option value="">Все категории</option>
+                    {% for cat in categories %}
+                    <option value="{{cat.id}}" {% if selected_category and selected_category.id == cat.id %}selected{% endif %}>
+                        {{cat.title}}
+                    </option>
+                    {% endfor %}
+                </select>
+            
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    {% for tag in tags %}
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <input {% if selected_tag and tag.id in selected_tag %} checked {% endif %}  value="{{tag.id}}" type="checkbox" name="tags">
+                        {{ tag.name }}
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <button type="submit">Фильтровать</button>
+                <a class="btnn" href="{% url 'news_creat' %}">+Добавление</a>
+                <a class="btnn" href="{% url 'tag_create' %}">+таг</a>
+                <a class="btnn" href="{% url 'category_create' %}">+категория</a>
+            </form>
+        </div>
         <div class="container">
             <h1 class="text">Welcome to News.kg</h1>
             <div class="wrapper">
                 {% for item in news %}
                 <div class="block">
-                    {% if item.image %}
-                    <img src="{{ item.image.url }}" alt="">
+                    {% if item.main_image %}
+                    <img src="{{ item.main_image.image.url }}" alt="">
                     {% else %}
-                    <img src="/media/news/photos/big.png" alt="">
+                    <!-- <img src="/media/news/photos/big.png" alt="#"> -->
                     {% endif %}
                     <div class="style">
                         <h3>{{ item.title }}</h3>
-                        <p>{{ item.descriptions }}</p>
+                        <p>{{ item.description }}</p>
                         <p><a href="#">{{ item.category.title }}</a></p>
                         <p>
                             {% for tag in item.tags.all %}
@@ -125,10 +242,18 @@
                             <a href="{% url 'news_detail' item.id %}">
                                 <button>View</button>
                             </a>
+                            <a href="{% url 'change' item.id %}">
+                                <button>Изменение</button>
+                            </a>
+                            <form method="post" action="{% url 'delete_news' item.id %}">
+                                {% csrf_token %}
+                                <button type="submit">Удалить</button>
+                            </form>
                             <div style="display: flex; align-items: center; gap: 6px;">
                                 <img src="/media/news/photos/vi.png" alt="">
                                 <span>{{ item.views }}</span>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -139,35 +264,3 @@
 </body>
 </html>
 
-
-<!-- <h1>News</h1>
-    {% for news_ in news %}
-    {% for image in news_.images.all %}
-    <a href="{{image.image.url}}">{{image.image.name}}</a><br>
-    {% endfor %}
-    <h2>{{news_.title}}</h2>
-    {% endfor %} -->
-
-<!-- 
-    <h1>news</h1>
-
-    {% for tags_ in newss.tags.all %}
-    <a href="{{tags.tags.url}}">{{tags.tags.name}}</a><br>
-
-    {% endfor %} -->
-
-<!-- <h1>Category</h1>
-
-
-    {% for cat_ in catygory %}
-    {{cat_.title}}
-        {% for new_ in cat_.news.all %}
-            {{new_.title}}
-        {% endfor %}
-    {% endfor %} -->
-
-<!-- <h1>Tag</h1>
-
-    {% for tag_ in tag %}
-    {{tag_.name}}
-    {% endfor %} -->

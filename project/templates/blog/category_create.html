@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить категорию</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .btn_2 {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #1d65ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        button,
+        a.btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        a.btn {
+            background-color: #1d65ff;
+        }
+
+        a.btn:hover {
+            background-color: #1051d1;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Добавить категорию</h1>
+        <form method="post" action="">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Название категорию" required>
+            <button type="submit">Сохранить</button>
+            <div class="btn_2">
+                <a class="btn" href="{% url 'news-list' %}">Home</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

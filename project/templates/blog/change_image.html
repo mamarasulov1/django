@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменить изображение</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        .form-container img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-container input[type="file"] {
+            margin-bottom: 20px;
+        }
+
+        .form-container button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            color: #1d65ff;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data" class="form-container">
+        {% csrf_token %}
+        <h2>Изменить изображение</h2>
+        <img src="{{ img.image.url }}" alt="Текущее изображение">
+        <input type="file" name="image" required>
+        <button type="submit">Сохранить</button>
+        <br>
+        <a href="{% url 'change' img.news.id %}" class="back-link">Назад</a>
+    </form>
+</body>
+</html>
